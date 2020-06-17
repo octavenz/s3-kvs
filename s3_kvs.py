@@ -4,13 +4,19 @@ import requests
 
 
 FORMATTERS = {
+    'text': lambda content: content,
     'json': lambda content: json.loads(content),
+}
+
+FILE_EXTENSIONS = {
+    'text': 'txt',
+    'json': 'json',
 }
 
 
 class ReadOnlyClient(object):
 
-    def __init__(self, domain, namespace=None, value_format='json'):
+    def __init__(self, domain, namespace=None, value_format='text'):
         self.domain = domain
         self.namespace = namespace
         self.value_format = value_format
@@ -19,14 +25,14 @@ class ReadOnlyClient(object):
         return self.get_formatter()(self.read(self.get_item_path(item)))
 
     def get_item_path(self, item):
-
         item_path = f'{self.namespace}/{item}' if self.namespace is not None else item
-        item_path = f'{item_path}.{self.value_format}' if self.value_format else item_path
-
-        return f'https://{self.domain}/{item_path}'
+        return f'https://{self.domain}/{item_path}.{self.get_extension()}'
 
     def get_formatter(self):
         return FORMATTERS[self.value_format]
+
+    def get_extension(self):
+        return FILE_EXTENSIONS[self.value_format]
 
     @staticmethod
     def read(url):

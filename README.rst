@@ -29,3 +29,17 @@ Or, use the get method to provide a default if no matching value is found:
     client.get('foo', 'oops')
 
     > 'oops'
+
+By default returned values are text. You can also treat them as json and automatically parse them:
+
+    text_client = ReadOnlyClient(domain='kvs.example.com')
+
+    client['foo']
+
+    > '{"bar": "baz"}'  # a json string
+
+    json_client = ReadOnlyClient(domain='kvs.example.com', value_format='json')
+
+    client['foo']
+
+    > {'bar': 'baz'}  # a python dict

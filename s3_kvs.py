@@ -38,7 +38,7 @@ class ReadOnlyClient(object):
         if response.status_code >= 500:
             raise ValueError(f'Error fetching from key-value store: {response.reason}')
 
-        return response.content.decode(response.encoding)
+        return response.content.decode()
 
     def get(self, key, default=None):
         try:
